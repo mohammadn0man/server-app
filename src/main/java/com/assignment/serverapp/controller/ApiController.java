@@ -7,19 +7,22 @@ import com.assignment.serverapp.model.User;
 import com.assignment.serverapp.repository.UserRepository;
 import com.assignment.serverapp.service.JwtService;
 import com.assignment.serverapp.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
-public class HomeController {
+public class ApiController {
     @Autowired
     private UserRepository repository;
 
@@ -32,6 +35,9 @@ public class HomeController {
     @Autowired
     private JwtService jwtTokenUtil;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @GetMapping("/")
     public String home() {
         return ("<h1>Welcome</h1>");
@@ -39,16 +45,19 @@ public class HomeController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> createUser(@RequestBody UserDto userDto) {
+
         var userModel = User.builder()
                 .userName(userDto.getUserName())
-                .password(userDto.getPassword())
+                .password(bCryptPasswordEncoder.encode(userDto.getPassword()))
+                .fullName(userDto.getFullName())
                 .build();
         try {
             repository.save(userModel);
         } catch (Exception e) {
+            log.error("signup exception : " + e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("something went wrong");
         }
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body("USER_CREATED");
     }
 
     @PostMapping("/authenticate")
@@ -58,9 +67,9 @@ public class HomeController {
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            log.error("Login with bad Credentials " + e);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("BAD_CREDENTIAL");
         }
-
 
         final var userDetails = userService
                 .loadUserByUsername(authRequest.getUsername());
@@ -70,15 +79,5 @@ public class HomeController {
         return ResponseEntity.ok(new AuthResponse(jwt));
     }
 
-
-    @GetMapping("/user")
-    public String user() {
-        return ("<h1>Welcome User</h1>");
-    }
-
-    @GetMapping("/admin")
-    public String admin() {
-        return ("<h1>Welcome Admin</h1>");
-    }
 }
 
