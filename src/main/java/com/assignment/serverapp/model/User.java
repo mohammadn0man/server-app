@@ -7,27 +7,26 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "User")
+@Entity
+@Table(name = "Users")
 public class User {
     @Id
-    @TableGenerator(name = "Emp_Gen",
+    @TableGenerator(name = "User_Gen",
             table = "ID_GEN",
             pkColumnName = "GEN_NAME",
             valueColumnName = "GEN_VAL",
-            pkColumnValue = "Emp_Gen",
+            pkColumnValue = "User_Gen",
             initialValue = 10000,
             allocationSize = 100)
     @GeneratedValue(strategy = GenerationType.TABLE,
-            generator = "Emp_Gen")
-    private int id;
+            generator = "User_Gen")
+    private int userId;
     @Column(unique = true)
     private String userName;
+    private String fullName;
     private String password;
-    private boolean active;
-    private String roles;
 }
