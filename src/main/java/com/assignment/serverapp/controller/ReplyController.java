@@ -1,6 +1,7 @@
 package com.assignment.serverapp.controller;
 
 import com.assignment.serverapp.dto.ReplyDto;
+import com.assignment.serverapp.model.Question;
 import com.assignment.serverapp.model.Reply;
 import com.assignment.serverapp.repository.ReplyRepository;
 import com.assignment.serverapp.util.MapperUtil;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -32,6 +34,10 @@ public class ReplyController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("RESPONSE_SUBMITTED");
     }
 
+    @GetMapping("question_reply/{id}")
+    public List<Reply> getReplyByQuestionId(@PathVariable Integer id){
+        return replyRepository.findByQuestion(Question.builder().questionId(id).build());
+    }
 
     @GetMapping("reply/{id}")
     public Optional<Reply> getReplyForQuestion(@PathVariable Integer id) {
