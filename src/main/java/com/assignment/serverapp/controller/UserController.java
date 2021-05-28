@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
         var userModel = MapperUtil.getModelMapper().map(userDto, User.class);
         userModel.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
@@ -65,7 +65,7 @@ public class UserController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity createAuthenticationToken(@RequestBody AuthRequestDto authRequestDto) {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequestDto authRequestDto) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequestDto.getUsername(), authRequestDto.getPassword())
