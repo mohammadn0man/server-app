@@ -83,6 +83,5 @@ public class UserController {
         return ResponseEntity.ok(new AuthResponseDto(jwt));
     }
 
-
 }
 
