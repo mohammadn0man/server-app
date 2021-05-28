@@ -1,11 +1,11 @@
-package com.assignment.serverapp.model;
+package com.assignment.serverapp.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class AuthResponse {
+public class AuthResponseDto {
     private final String jwt;
 }
 

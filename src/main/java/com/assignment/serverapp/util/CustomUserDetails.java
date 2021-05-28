@@ -1,5 +1,6 @@
-package com.assignment.serverapp.model;
+package com.assignment.serverapp.util;
 
+import com.assignment.serverapp.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

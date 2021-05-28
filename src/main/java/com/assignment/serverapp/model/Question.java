@@ -1,5 +1,6 @@
 package com.assignment.serverapp.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,7 @@ import java.util.Date;
 @Table(name = "Question")
 public class Question {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private int questionId;
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -24,10 +25,22 @@ public class Question {
     @OneToOne
     @JoinColumn(name = "product_id")
     private Product product;
-    private String title;
-    private String subject;
-    private int replyCount;
+
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss",  timezone = "IST")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss",  timezone = "IST")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date closedDate;
+
+    private String title;
+
+    private String subject;
+
+    private String text;
+
+    private int replyCount;
+
     private int acceptedAnswerId;
 }

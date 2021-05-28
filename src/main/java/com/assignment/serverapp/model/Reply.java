@@ -16,7 +16,7 @@ import java.util.Date;
 @Table(name = "Reply")
 public class Reply {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private int replyId;
     @ManyToOne
     @JoinColumn(name = "question_id")

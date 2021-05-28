@@ -1,6 +1,6 @@
 package com.assignment.serverapp.service;
 
-import com.assignment.serverapp.model.CustomUserDetails;
+import com.assignment.serverapp.util.CustomUserDetails;
 import com.assignment.serverapp.model.User;
 import com.assignment.serverapp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
