@@ -53,7 +53,9 @@ public class UserController {
         var userModel = MapperUtil.getModelMapper().map(userDto, User.class);
         userModel.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
-        // TODO: 28-05-2021 add if user exist logic
+        if (userRepository.existsByUserName(userDto.getUserName())) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("USER_ALREADY_EXISTS");
+        }
 
         try {
             userRepository.save(userModel);
