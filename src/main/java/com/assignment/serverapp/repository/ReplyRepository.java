@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ReplyRepository extends CrudRepository<Reply, Integer> {
     List<Reply> findByQuestion(Question question);
+    boolean existsById(Integer id);
 }
