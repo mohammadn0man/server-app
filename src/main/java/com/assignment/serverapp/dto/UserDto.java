@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
-    private int id;
+    private int userId;
     private String userName;
     private String password;
     private String fullName;

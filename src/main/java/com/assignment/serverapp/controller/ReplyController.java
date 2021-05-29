@@ -5,7 +5,6 @@ import com.assignment.serverapp.dto.ReplyDto;
 import com.assignment.serverapp.model.Like;
 import com.assignment.serverapp.model.Question;
 import com.assignment.serverapp.model.Reply;
-import com.assignment.serverapp.model.User;
 import com.assignment.serverapp.repository.LikeRepository;
 import com.assignment.serverapp.repository.ReplyRepository;
 import com.assignment.serverapp.util.MapperUtil;
@@ -52,15 +51,7 @@ public class ReplyController {
 
     @PostMapping("/like_reply")
     public ResponseEntity<String> likeReply(@RequestBody LikeReplyDto likeReplyDto){
-//        var like = MapperUtil.getModelMapper().map(likeReplyDto, Like.class);
-        var like = Like.builder()
-                .reply(Reply.builder()
-                        .replyId(likeReplyDto.getReplyId())
-                        .build())
-                .user(User
-                        .builder()
-                        .userId(likeReplyDto.getUserId())
-                        .build()).build();
+        var like = MapperUtil.getModelMapper().map(likeReplyDto, Like.class);
         try {
             likeRepository.save(like);
         } catch (Exception e) {
