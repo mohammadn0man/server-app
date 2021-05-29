@@ -2,6 +2,7 @@ package com.assignment.serverapp.filter;
 
 import com.assignment.serverapp.service.JwtService;
 import com.assignment.serverapp.service.UserService;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,7 +36,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            username = jwtService.extractUsername(jwt);
+            try {
+                username = jwtService.extractUsername(jwt);
+            } catch (ExpiredJwtException e) {
+                //is it fine?
+                var sb = new StringBuilder();
+                sb.append("{ ");
+                sb.append("\"error\": \"Unauthorized\",\n");
+                sb.append("\"message\": \"TOKEN_EXPIRED\",\n");
+                sb.append("\"path\": \"").append(request.getRequestURL()).append("\"");
+                sb.append("} ");
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write(sb.toString());
+                return;
+            }
         }
 
 
