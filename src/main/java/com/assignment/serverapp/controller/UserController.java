@@ -3,7 +3,9 @@ package com.assignment.serverapp.controller;
 import com.assignment.serverapp.dto.AuthRequestDto;
 import com.assignment.serverapp.dto.AuthResponseDto;
 import com.assignment.serverapp.dto.UserDto;
+import com.assignment.serverapp.model.ExpireToken;
 import com.assignment.serverapp.model.User;
+import com.assignment.serverapp.repository.ExpireTokenRepository;
 import com.assignment.serverapp.repository.UserRepository;
 import com.assignment.serverapp.service.JwtService;
 import com.assignment.serverapp.service.UserService;
@@ -17,10 +19,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -41,6 +40,9 @@ public class UserController {
     private JwtService jwtTokenUtil;
 
     @Autowired
+    private ExpireTokenRepository expireTokenRepository;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @GetMapping("/")
@@ -48,8 +50,14 @@ public class UserController {
         return ("<h1>Welcome</h1>");
     }
 
+    @GetMapping("/user_logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        expireTokenRepository.save(new ExpireToken(token.substring(7)));
+        return ResponseEntity.status(HttpStatus.OK).body("LOGOUT_SUCCESSFUL");
+    }
+
     @PostMapping("/signup")
-    public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<?> createUser(@RequestBody UserDto userDto) {
         var userModel = MapperUtil.getModelMapper().map(userDto, User.class);
         userModel.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
@@ -63,7 +71,12 @@ public class UserController {
             log.error("signup exception : " + e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("something went wrong");
         }
-        return ResponseEntity.status(HttpStatus.OK).body("USER_CREATED");
+
+        final var userDetails = userService
+                .loadUserByUsername(userModel.getUserName());
+        final String jwt = jwtTokenUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new AuthResponseDto(userDetails.getUsername(), userDetails.getUserId(), jwt));
     }
 
     @PostMapping("/authenticate")
@@ -74,7 +87,7 @@ public class UserController {
             );
         } catch (BadCredentialsException e) {
             log.error("Login with bad Credentials " + e);
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("BAD_CREDENTIAL");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("INVALID_CREDENTIAL");
         }
 
         final var userDetails = userService
@@ -82,7 +95,7 @@ public class UserController {
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new AuthResponseDto(jwt));
+        return ResponseEntity.ok(new AuthResponseDto(userDetails.getUsername(), userDetails.getUserId(), jwt));
     }
 
 }

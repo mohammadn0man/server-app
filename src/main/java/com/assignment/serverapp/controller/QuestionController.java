@@ -42,8 +42,12 @@ public class QuestionController {
     }
 
     @GetMapping("/get_all_question")
-    public List<Question> getQuestion() {
-        return (List<Question>) questionRepository.findAll();
+    public List<QuestionDto> getQuestion() {
+        List<QuestionDto> list = new ArrayList<>();
+        for ( Question question : (List<Question>) questionRepository.findAll() ){
+            list.add(MapperUtil.getModelMapper().map(question, QuestionDto.class));
+        }
+        return list;
     }
 
     @GetMapping("question_by_user/{id}")
@@ -54,14 +58,14 @@ public class QuestionController {
     @GetMapping("question_by_username/{name}")
     public List<Question> getQuestionsByUser(@PathVariable String name) {
         Optional<User> user = userRepository.findByUserName(name);
-        if (user.isPresent()){
+        if (user.isPresent()) {
             return getQuestionsByUser(user.get().getUserId());
         }
         return new ArrayList<>();
     }
 
     @GetMapping("question_by_product/{id}")
-    public List<Question> getQuestionByProduct(@PathVariable int id){
+    public List<Question> getQuestionByProduct(@PathVariable int id) {
         return questionRepository.findByProduct(Product.builder().productId(id).build());
     }
 
