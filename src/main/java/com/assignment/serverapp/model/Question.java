@@ -36,8 +36,10 @@ public class Question {
 
     private String title;
 
+    @Column(name = "question_subject")
     private String subject;
 
+    @Column(name = "content", length = 6380)
     private String text;
 
     private int replyCount;

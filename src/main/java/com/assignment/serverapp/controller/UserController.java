@@ -76,7 +76,7 @@ public class UserController {
                 .loadUserByUsername(userModel.getUserName());
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new AuthResponseDto(userDetails.getUsername(), userDetails.getUserId(), jwt));
+        return ResponseEntity.ok(new AuthResponseDto(userDetails.getUsername(), userDetails.getFullName(), userDetails.getUserId(), jwt));
     }
 
     @PostMapping("/authenticate")
@@ -95,7 +95,7 @@ public class UserController {
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new AuthResponseDto(userDetails.getUsername(), userDetails.getUserId(), jwt));
+        return ResponseEntity.ok(new AuthResponseDto(userDetails.getUsername(), userDetails.getFullName(), userDetails.getUserId(), jwt));
     }
 
 }

@@ -13,6 +13,7 @@ public class CustomUserDetails implements UserDetails {
 
     private String userName;
     private String password;
+    private String fullName;
     private int userId;
 
     public CustomUserDetails() {
@@ -21,6 +22,7 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(User user) {
         this.userName = user.getUserName();
         this.password = user.getPassword();
+        this.fullName = user.getFullName();
         this.userId = user.getUserId();
     }
 
@@ -43,6 +45,10 @@ public class CustomUserDetails implements UserDetails {
 
     public int getUserId() {
         return userId;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     @Override
