@@ -42,12 +42,12 @@ public class QuestionController {
     }
 
     @GetMapping("/get_all_question")
-    public List<QuestionDto> getQuestion() {
+    public List<Question> getQuestion() {
         List<QuestionDto> list = new ArrayList<>();
         for ( Question question : (List<Question>) questionRepository.findAll() ){
             list.add(MapperUtil.getModelMapper().map(question, QuestionDto.class));
         }
-        return list;
+        return (List<Question>) questionRepository.findAll();
     }
 
     @GetMapping("question_by_user/{id}")

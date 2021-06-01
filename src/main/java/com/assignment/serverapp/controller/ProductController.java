@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+// TODO: 31-05-2021 add product api
 @RestController
 public class ProductController {
     @Autowired
@@ -17,5 +18,7 @@ public class ProductController {
     public List<Product> getProducts(){
         return (List<Product>) productRepository.findAll();
     }
+
+
 
 }
