@@ -28,6 +28,7 @@ public class Reply {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "content", length = 6380)
     private String text;
 
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss",  timezone = "IST")
