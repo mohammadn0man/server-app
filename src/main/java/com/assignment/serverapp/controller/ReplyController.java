@@ -4,9 +4,9 @@ import com.assignment.serverapp.dto.LikeReplyDto;
 import com.assignment.serverapp.dto.ReplyDto;
 import com.assignment.serverapp.model.Reply;
 import com.assignment.serverapp.service.ReplyService;
+import com.assignment.serverapp.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +21,7 @@ public class ReplyController {
 
     @PostMapping("/add_reply")
     public ResponseEntity<String> addReply(@RequestBody ReplyDto replyDto) {
-        return replyService.save(replyDto) ?
-                ResponseEntity.status(HttpStatus.ACCEPTED).body("RESPONSE_SUBMITTED") :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("INVAID_PARAMETER");
+        return ResponseUtil.filterResponse(replyService.save(replyDto));
     }
 
     @GetMapping("question_reply/{id}")
@@ -38,9 +36,7 @@ public class ReplyController {
 
     @PostMapping("/like_reply")
     public ResponseEntity<String> likeReply(@RequestBody LikeReplyDto likeReplyDto) {
-        return replyService.likeReply(likeReplyDto) ?
-                ResponseEntity.status(HttpStatus.OK).body("RESPONSE_SAVED") :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("INVALID_PARAMETER");
+        return ResponseUtil.filterResponse(replyService.likeReply(likeReplyDto));
     }
 
     @GetMapping("/get_like/{id}")

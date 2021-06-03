@@ -3,9 +3,9 @@ package com.assignment.serverapp.controller;
 import com.assignment.serverapp.dto.QuestionDto;
 import com.assignment.serverapp.model.Question;
 import com.assignment.serverapp.service.QuestionService;
+import com.assignment.serverapp.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +19,7 @@ public class QuestionController {
 
     @PostMapping("/ask_question")
     public ResponseEntity<String> askQuestion(@RequestBody QuestionDto questionDto) {
-        return questionService.save(questionDto) ?
-                ResponseEntity.status(HttpStatus.ACCEPTED).body("RECORD_ADDED") :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("INVALID_PARAMETER");
+        return ResponseUtil.filterResponse(questionService.save(questionDto));
     }
 
     @GetMapping("/get_all_question")
