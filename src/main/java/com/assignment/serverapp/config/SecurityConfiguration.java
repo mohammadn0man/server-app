@@ -36,7 +36,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/",
                         "/signup",
                         "/user_logout",
-                        "/get_all_question",
+                        "/get_all_question/**",
+                        "/question_by_product/**",
+                        "/question_by_user/**",
                         "/question_reply/**")
                 .permitAll()
                 .antMatchers("/authenticate").permitAll().anyRequest().authenticated()
@@ -62,7 +64,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public BCryptPasswordEncoder getPasswordEncoder() {
-        return  new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
 
 }

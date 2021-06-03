@@ -1,11 +1,10 @@
 package com.assignment.serverapp.service;
 
-import com.assignment.serverapp.util.CustomUserDetails;
 import com.assignment.serverapp.model.User;
 import com.assignment.serverapp.repository.UserRepository;
+import com.assignment.serverapp.util.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
-
 
     @Override
     public CustomUserDetails  loadUserByUsername(String userName) throws UsernameNotFoundException {
