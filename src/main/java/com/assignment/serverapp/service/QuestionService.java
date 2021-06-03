@@ -8,6 +8,8 @@ import com.assignment.serverapp.repository.QuestionRepository;
 import com.assignment.serverapp.util.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -43,5 +45,9 @@ public class QuestionService {
 
     public List<Question> getByProductId(int id) {
         return questionRepository.findByProduct(Product.builder().productId(id).build());
+    }
+
+    public List<Question> search(Specification<Question> spec, Sort sort) {
+        return questionRepository.findAll(spec, sort);
     }
 }

@@ -22,11 +22,6 @@ public class QuestionController {
         return ResponseUtil.filterResponse(questionService.save(questionDto));
     }
 
-    @GetMapping("/get_all_question")
-    public List<Question> getQuestion() {
-        return questionService.getAll();
-    }
-
     @GetMapping("question_by_user/{id}")
     public List<Question> getQuestionsByUser(@PathVariable int id) {
         return questionService.getByUserId(id);
