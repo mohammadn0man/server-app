@@ -2,18 +2,21 @@ package com.assignment.serverapp.controller;
 
 import com.assignment.serverapp.model.Product;
 import com.assignment.serverapp.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/product")
 public class ProductController {
-    @Autowired
-    ProductService productService;
 
-    @GetMapping("/all_product")
+    private final ProductService productService;
+
+    @GetMapping("/get")
     public List<Product> getProducts() {
         return productService.getAll();
     }

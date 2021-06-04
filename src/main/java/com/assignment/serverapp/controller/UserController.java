@@ -5,24 +5,23 @@ import com.assignment.serverapp.dto.AuthResponseDto;
 import com.assignment.serverapp.dto.UserDto;
 import com.assignment.serverapp.service.UserService;
 import com.assignment.serverapp.util.ResponseUtil;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/user")
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping("/")
     public String home() {
         return ("<h1>Welcome</h1>");
     }
 
-    @GetMapping("/user_logout")
+    @GetMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
         return ResponseUtil.filterResponse(userService.logout(token));
     }

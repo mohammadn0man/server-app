@@ -34,14 +34,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/",
-                        "/signup",
-                        "/user_logout",
-                        "/get_all_question/**",
-                        "/question_by_product/**",
-                        "/question_by_user/**",
-                        "/question_reply/**")
+                        "/api/user/signup",
+                        "/api/user/logout",  // /user/logout
+                        "/api/question/get/**",
+                        "/api/reply/question/**")
                 .permitAll()
-                .antMatchers("/authenticate").permitAll().anyRequest().authenticated()
+                .antMatchers("/api/user/authenticate").permitAll().anyRequest().authenticated()
                 .and().formLogin();
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }

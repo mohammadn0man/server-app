@@ -14,6 +14,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
+    // should be changed by client upon requirement
     private static final String SECRET_KEY = "secret";
 
     public String extractUsername(String token) {
