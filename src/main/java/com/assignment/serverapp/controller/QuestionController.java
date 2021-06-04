@@ -1,6 +1,7 @@
 package com.assignment.serverapp.controller;
 
 import com.assignment.serverapp.dto.QuestionDto;
+import com.assignment.serverapp.exception.RequestParameterException;
 import com.assignment.serverapp.model.Question;
 import com.assignment.serverapp.service.QuestionService;
 import com.assignment.serverapp.util.ResponseUtil;
@@ -17,7 +18,7 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping("/ask")
-    public ResponseEntity<String> askQuestion(@RequestBody QuestionDto questionDto) {
+    public ResponseEntity<String> askQuestion(@RequestBody QuestionDto questionDto) throws RequestParameterException {
         return ResponseUtil.filterResponse(questionService.save(questionDto));
     }
 

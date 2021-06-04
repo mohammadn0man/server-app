@@ -1,15 +1,17 @@
 package com.assignment.serverapp.util;
 
+import com.assignment.serverapp.exception.RequestParameterException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class ResponseUtil {
     private ResponseUtil() {
     }
-    public static ResponseEntity<String> filterResponse(boolean flag) {
-        return flag ?
-                ResponseEntity.status(HttpStatus.ACCEPTED).body("RESPONSE_SUBMITTED") :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("INVAID_PARAMETER");
 
+    public static ResponseEntity<String> filterResponse(boolean flag) throws RequestParameterException {
+        if (!flag) {
+            throw new RequestParameterException("Invalid parameter in request");
+        }
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("RESPONSE_SUBMITTED");
     }
 }

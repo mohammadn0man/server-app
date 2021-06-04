@@ -2,6 +2,7 @@ package com.assignment.serverapp.controller;
 
 import com.assignment.serverapp.dto.LikeReplyDto;
 import com.assignment.serverapp.dto.ReplyDto;
+import com.assignment.serverapp.exception.RequestParameterException;
 import com.assignment.serverapp.model.Reply;
 import com.assignment.serverapp.service.ReplyService;
 import com.assignment.serverapp.util.ResponseUtil;
@@ -19,7 +20,7 @@ public class ReplyController {
     private final ReplyService replyService;
 
     @PostMapping("/add")
-    public ResponseEntity<String> addReply(@RequestBody ReplyDto replyDto) {
+    public ResponseEntity<String> addReply(@RequestBody ReplyDto replyDto) throws RequestParameterException {
         return ResponseUtil.filterResponse(replyService.save(replyDto));
     }
 
@@ -34,7 +35,7 @@ public class ReplyController {
     }
 
     @PostMapping("/like")
-    public ResponseEntity<String> likeReply(@RequestBody LikeReplyDto likeReplyDto) {
+    public ResponseEntity<String> likeReply(@RequestBody LikeReplyDto likeReplyDto) throws RequestParameterException {
         return ResponseUtil.filterResponse(replyService.likeReply(likeReplyDto));
     }
 

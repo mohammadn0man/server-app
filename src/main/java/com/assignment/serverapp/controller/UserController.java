@@ -3,6 +3,8 @@ package com.assignment.serverapp.controller;
 import com.assignment.serverapp.dto.AuthRequestDto;
 import com.assignment.serverapp.dto.AuthResponseDto;
 import com.assignment.serverapp.dto.UserDto;
+import com.assignment.serverapp.exception.RequestParameterException;
+import com.assignment.serverapp.exception.UserException;
 import com.assignment.serverapp.service.UserService;
 import com.assignment.serverapp.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,27 +24,33 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) throws RequestParameterException {
         return ResponseUtil.filterResponse(userService.logout(token));
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> createUser(@RequestBody UserDto userDto) {
-        return userService.checkUserExist(userDto.getUserName()) ?
-                ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("USER_ALREADY_EXISTS") :
-                returnToken(userService.createUser(userDto));
+    public ResponseEntity<?> createUser(@RequestBody UserDto userDto) throws UserException {
+        if (userService.checkUserExist(userDto.getUserName())) {
+            throw new UserException("Registration Fail : user already exist");
+        }
+        return returnToken(userService.createUser(userDto));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequestDto authRequestDto) {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequestDto authRequestDto) throws UserException {
         return returnToken(userService.authenticateUser(authRequestDto));
     }
 
-    public ResponseEntity<?> returnToken(AuthResponseDto authResponseDto) {
-        return (authResponseDto == null) ?
-                ResponseEntity.status(HttpStatus.FORBIDDEN).body("INVALID_CREDENTIAL") :
-                ResponseEntity.ok(authResponseDto);
+    public ResponseEntity<?> returnToken(AuthResponseDto authResponseDto) throws UserException {
+        if (authResponseDto == null) {
+            throw new UserException("You have entered invalid credentials");
+        }
+        return ResponseEntity.ok(authResponseDto);
     }
 
+    @ExceptionHandler({UserException.class})
+    public ResponseEntity<String> handleAuthenticationException(UserException e) {
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+    }
 }
 
