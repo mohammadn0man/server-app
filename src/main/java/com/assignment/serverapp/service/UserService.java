@@ -106,4 +106,8 @@ public class UserService implements UserDetailsService {
         }
         return true;
     }
+
+    public long getCount() {
+        return userRepository.count();
+    }
 }

@@ -50,4 +50,8 @@ public class QuestionService {
     public List<Question> search(Specification<Question> spec, Sort sort) {
         return questionRepository.findAll(spec, sort);
     }
+
+    public long getCount() {
+        return questionRepository.count();
+    }
 }

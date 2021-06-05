@@ -57,4 +57,8 @@ public class ReplyService {
                         .body(likeService.findByReply(id)) :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body("REPLY_NOT_EXIST");
     }
+
+    public long getCount() {
+        return replyRepository.count();
+    }
 }
