@@ -7,12 +7,15 @@ import com.assignment.serverapp.model.Reply;
 import com.assignment.serverapp.service.ReplyService;
 import com.assignment.serverapp.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/reply")
@@ -44,4 +47,9 @@ public class ReplyController {
         return replyService.getLikeByReplyId(id);
     }
 
+    @ExceptionHandler({RequestParameterException.class})
+    public ResponseEntity<String> handleAuthenticationException(RequestParameterException e) {
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+    }
 }

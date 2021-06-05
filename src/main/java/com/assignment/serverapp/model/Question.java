@@ -42,7 +42,5 @@ public class Question {
     @Column(name = "content", length = 6380)
     private String text;
 
-    private int replyCount;
-
     private int acceptedAnswerId;
 }

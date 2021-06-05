@@ -1,6 +1,8 @@
 package com.assignment.serverapp.service;
 
 import com.assignment.serverapp.dto.QuestionDto;
+import com.assignment.serverapp.dto.QuestionSolutionDto;
+import com.assignment.serverapp.exception.RequestParameterException;
 import com.assignment.serverapp.model.Product;
 import com.assignment.serverapp.model.Question;
 import com.assignment.serverapp.model.User;
@@ -38,7 +40,6 @@ public class QuestionService {
         return (List<Question>) questionRepository.findAll();
     }
 
-
     public List<Question> getByUserId(int id) {
         return questionRepository.findByUser(User.builder().userId(id).build());
     }
@@ -53,5 +54,19 @@ public class QuestionService {
 
     public long getCount() {
         return questionRepository.count();
+    }
+
+    public boolean markAnswer(QuestionSolutionDto questionSolutionDto) throws RequestParameterException {
+        var question = questionRepository.findById(questionSolutionDto.getQuestionId());
+        var newQuestion = question.orElseThrow(()->new RequestParameterException("Invalid question Id"));
+        newQuestion.setClosedDate(new Date());
+        newQuestion.setAcceptedAnswerId(questionSolutionDto.getReplyId());
+        try {
+            questionRepository.save(newQuestion);
+        } catch (Exception e) {
+            log.error("error in adding request : " + e);
+            return false;
+        }
+        return true;
     }
 }

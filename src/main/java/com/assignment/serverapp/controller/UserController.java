@@ -8,10 +8,12 @@ import com.assignment.serverapp.exception.UserException;
 import com.assignment.serverapp.service.UserService;
 import com.assignment.serverapp.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
@@ -50,6 +52,13 @@ public class UserController {
 
     @ExceptionHandler({UserException.class})
     public ResponseEntity<String> handleAuthenticationException(UserException e) {
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+    }
+
+    @ExceptionHandler({RequestParameterException.class})
+    public ResponseEntity<String> handleAuthenticationException(RequestParameterException e) {
+        log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
     }
 }
