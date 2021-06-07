@@ -1,8 +1,11 @@
 package com.assignment.serverapp.filter;
 
 import com.assignment.serverapp.service.JwtService;
+import com.assignment.serverapp.service.TokenService;
 import com.assignment.serverapp.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.impl.DefaultClaims;
+import io.jsonwebtoken.impl.DefaultHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +28,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private TokenService tokenService;
+
+    /***
+     * Filter to check if token used is expired or not
+     * <p>if the token is expired the request is block and expired token response is passed</p>
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
@@ -38,6 +48,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwt = authorizationHeader.substring(7);
             try {
                 username = jwtService.extractUsername(jwt);
+                if (tokenService.isExist(jwt)){
+                    throw new ExpiredJwtException(new DefaultHeader(),new DefaultClaims(), "Expired Token");
+                }
             } catch (ExpiredJwtException e) {
                 //is it fine?
                 var sb = new StringBuilder();

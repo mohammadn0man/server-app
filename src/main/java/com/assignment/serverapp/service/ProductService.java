@@ -2,16 +2,19 @@ package com.assignment.serverapp.service;
 
 import com.assignment.serverapp.model.Product;
 import com.assignment.serverapp.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
-    @Autowired
-    ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
+    /***
+     * @return list of all the products
+     */
     public List<Product> getAll() {
         return (List<Product>) productRepository.findAll();
     }

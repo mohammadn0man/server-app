@@ -23,6 +23,10 @@ import java.util.List;
 public class SearchController {
     private final SearchService searchService;
 
+    /***
+     * simple search functionality using specification
+     * @return list of questions in desired order
+     */
     @GetMapping("/get")
     public ResponseEntity<List<Question>> getSearchResult(@Or({
                     @Spec(path = "user.userName", params = "query", spec = Like.class),

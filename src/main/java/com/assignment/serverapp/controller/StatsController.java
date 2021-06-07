@@ -14,6 +14,10 @@ public class StatsController {
 
     private final StatsService statsService;
 
+    /***
+     * api for extracting the stats like user count, questions count and responses count.
+     * @return stats obj with desigred integer values
+     */
     @GetMapping("/get")
     public StatsDto get(){
         return statsService.getStats();

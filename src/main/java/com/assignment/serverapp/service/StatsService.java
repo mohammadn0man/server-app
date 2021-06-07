@@ -12,6 +12,10 @@ public class StatsService {
     private final ReplyService replyService;
     private final UserService userService;
 
+    /***
+     * for extracting the stats like user count, questions count and responses count.
+     * @return stats obj with desigred integer values
+     */
     public StatsDto getStats(){
         return StatsDto.builder()
                 .questionCount(questionService.getCount())
