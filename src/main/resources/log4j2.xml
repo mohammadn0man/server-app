@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="hubApp" packages="">
+    <Properties>
+        <Property name="tillster_hub_dir">/tillster/hub</Property>
+        <Property name="rolloverTime">0 * * * * ?</Property>
+    </Properties>
+    <Appenders>
+        <RollingRandomAccessFile name="hubApp" fileName="${sys:tillster_hub_dir}/logs/hub.log"
+                                 filePattern="${sys:tillster_hub_dir}/logs_archive/app-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %notEmpty{[%mdc{correlationId}]} %.-10000m
+                    %notEmpty{[%.-10000mdc{serializedObject}]}%n%n
+                </Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${sys:tillster_hub_dir}/logs_archive" maxDepth="1">
+                    <IfFileName glob="app-*.log.gz"/>
+                    <IfLastModified age="30d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+        <RollingFile name="hubAppConnection" fileName="${sys:tillster_hub_dir}/logs/connection_hub.log"
+                     filePattern="${sys:tillster_hub_dir}/logs_archive/connection-app-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %notEmpty{[%mdc{correlationId}]} %.-10000m
+                    %notEmpty{[%.-10000mdc{serializedObject}]}%n%n
+                </Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="1 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${sys:tillster_hub_dir}/logs_archive" maxDepth="1">
+                    <IfFileName glob="connection-app-*.log.gz"/>
+                    <IfLastModified age="30d"/>
+                    <IfAccumulatedFileSize exceeds="5 MB"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <RollingFile name="hubAppStream" fileName="${sys:tillster_hub_dir}/logs/hub-stream.log"
+                     filePattern="${sys:tillster_hub_dir}/logs/rolling/app-%d{MM-dd-yyyy-HH-mm}-%i.log"
+                     bufferedIO="false" bufferSize="0">
+            <PatternLayout>
+                <charset>UTF-8</charset>
+                <disableAnsi>true</disableAnsi>
+                <alwaysWriteExceptions>false</alwaysWriteExceptions>
+                <pattern>{"level": "%level{lowerCase=false}", "message": "%enc{%.-10000m}{JSON}",%notEmpty{ "data":
+                    "%enc{%mdc{data}}{JSON}",} %notEmpty{ "serializedObject":
+                    "%enc{%.-10000mdc{serializedObject}}{JSON}",} "loggerClassName": "%c{0}",%notEmpty{ "thrown":
+                    "%enc{%xEx{full}}{JSON}",} "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}{GMT+0}"%notEmpty{, "mdc":
+                    {%notEmpty{"correlationId":"%mdc{correlationId}"}%notEmpty{,"tenantCode":"%mdc{tenantCode}"}%notEmpty{,"storeNumber":"%mdc{storeNumber}"}%notEmpty{,"platform":"%mdc{platform}"}%notEmpty{,"adapter":"%mdc{adapter}"}%notEmpty{,"platformTenantId":"%mdc{platformTenantId}"}%notEmpty{,"platformStoreId":"%mdc{platformStoreId}"}%notEmpty{,"initiator":"%mdc{initiator}"}%notEmpty{,"correlationMetaData":"%enc{%mdc{correlationMetaData}}{JSON}"}}}}%n
+                </pattern>
+            </PatternLayout>
+            <CronTriggeringPolicy schedule="${rolloverTime}" evaluateOnStartup="true"/>
+        </RollingFile>
+    </Appenders>
+
+
+    <Loggers>
+        <Logger name="com.assignment.serverapp" level="OFF"/>
+        <Root level="OFF">
+        </Root>
+        <AppenderRef ref="appLog"/>
+        <AppenderRef ref="Console"/>
+
+        <Root level="debug">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
