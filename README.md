@@ -1,5 +1,8 @@
 # Project
 
+## Database schema
+![Db Schema](./db_schema.png)
+
 ### POST add user
 http://localhost:8082/api/user/signup
 
